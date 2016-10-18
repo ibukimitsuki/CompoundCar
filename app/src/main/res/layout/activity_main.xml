@@ -1,0 +1,91 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:theme="@style/AppTheme"
+    android:background="@drawable/back1">
+
+    <LinearLayout
+
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
+
+    </LinearLayout>
+
+    <LinearLayout
+
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
+
+        <rcfans.com.cmracing.StickView
+            android:layout_width="0px"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:id="@+id/stick"
+            style="@style/Transparent" />
+
+        <LinearLayout
+            android:layout_width="0px"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:weightSum="1">
+
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="474dp"
+                android:id="@+id/receivedDataScrollView"
+                android:layout_weight="1.01"
+                android:fillViewport="false">
+                <TextView android:id="@+id/in"
+                 android:layout_width="fill_parent"
+                 android:layout_height="wrap_content"
+                    />
+            </ScrollView>
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:id="@+id/connect"
+                android:text="蓝牙连接"
+                android:layout_weight="0.02"
+                android:onClick="onConnectButtonClicked"/>
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:id="@+id/sensor1"
+                android:text="sensor1启动"
+                android:layout_weight="0.02"
+                android:onClick="onConnectButtonClicked"/>
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:id="@+id/sensor2"
+                android:text="sensor2启动"
+                android:layout_weight="0.02"
+                android:onClick="onConnectButtonClicked"/>
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:id="@+id/sensor3"
+                android:text="sensor3启动"
+                android:layout_weight="0.02"
+            />
+
+        </LinearLayout>
+
+        <rcfans.com.cmracing.ThrottleStick
+            android:layout_width="0px"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:id="@+id/button"
+            style="@style/Transparent" />
+
+    </LinearLayout>
+
+
+</FrameLayout>

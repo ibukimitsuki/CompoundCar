@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">CMRacing</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+
+    <string name="mod_rc">RC</string>
+    <string name="mod_wifi">wifi</string>
+</resources>
