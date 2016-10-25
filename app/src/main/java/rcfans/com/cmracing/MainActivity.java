@@ -73,9 +73,6 @@ public class MainActivity extends ActionBarActivity {
     private boolean start2 = false;
     private boolean start3 = false;
 
-    ResultSetMetaData
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
