@@ -14,8 +14,7 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceHolder.Callback;
 import android.view.SurfaceView;
 
-public class ThrottleStick extends SurfaceView implements Callback,Runnable
-{
+public class ThrottleStick extends SurfaceView implements Callback, Runnable {
     private boolean flag;
     private boolean draw;
 
@@ -28,8 +27,8 @@ public class ThrottleStick extends SurfaceView implements Callback,Runnable
     private SurfaceHolder sfh;
     private Paint paint;
 
-    private float smallCenterX , smallCenterY, smallCenterR = 20;
-    private float BigCenterX , BigCenterY, BigCenterR = 40;
+    private float smallCenterX, smallCenterY, smallCenterR = 20;
+    private float BigCenterX, BigCenterY, BigCenterR = 40;
     //private float BigThrottle = 60;
     private float minX, minY, maxX, maxY;
 
@@ -40,9 +39,8 @@ public class ThrottleStick extends SurfaceView implements Callback,Runnable
     public static final String THROTTLEY_CHANGED = "throttley_changed_to";
 
 
-    public ThrottleStick(Context context,AttributeSet attrs)
-    {
-        super(context,attrs);
+    public ThrottleStick(Context context, AttributeSet attrs) {
+        super(context, attrs);
         sfh = this.getHolder();
         sfh.addCallback(this);
         paint = new Paint();
@@ -51,78 +49,60 @@ public class ThrottleStick extends SurfaceView implements Callback,Runnable
     }
 
     @Override
-    public void run()
-    {
-        while (flag)
-        {
+    public void run() {
+        while (flag) {
             long start = System.currentTimeMillis();
-            if(draw)
-            {
+            if (draw) {
                 drawStick();
             }
             logic();
             long end = System.currentTimeMillis();
-            try
-            {
-                if (end - start < 50)
-                {
+            try {
+                if (end - start < 50) {
                     Thread.sleep(50 - (end - start));
                 }
-            }
-            catch (InterruptedException e)
-            {
+            } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         }
     }
 
-    public void logic()
-    {
-            Intent xIntent = new Intent(THROTTLEX_CHANGED);
-            Intent yIntent = new Intent(THROTTLEY_CHANGED);
-            float valx = (smallCenterY - (BigCenterY - BigCenterR))/BigCenterR*100;
-            float valy = (smallCenterX - (BigCenterX - BigCenterR))/BigCenterR*100;
-            xIntent.putExtra("throttlex", Math.round(valx));
-            yIntent.putExtra("throttley", Math.round(valy));
-            LocalBroadcastManager.getInstance(getContext()).sendBroadcast(xIntent);
-            LocalBroadcastManager.getInstance(getContext()).sendBroadcast(yIntent);
+    public void logic() {
+        Intent xIntent = new Intent(THROTTLEX_CHANGED);
+        Intent yIntent = new Intent(THROTTLEY_CHANGED);
+        float valx = (smallCenterY - (BigCenterY - BigCenterR)) / BigCenterR * 100;
+        float valy = (smallCenterX - (BigCenterX - BigCenterR)) / BigCenterR * 100;
+        xIntent.putExtra("throttlex", Math.round(valx));
+        yIntent.putExtra("throttley", Math.round(valy));
+        LocalBroadcastManager.getInstance(getContext()).sendBroadcast(xIntent);
+        LocalBroadcastManager.getInstance(getContext()).sendBroadcast(yIntent);
     }
 
     @Override
     //
-    public boolean onTouchEvent(MotionEvent event)
-    {
-        if (event.getAction() == MotionEvent.ACTION_UP)
-        {
+    public boolean onTouchEvent(MotionEvent event) {
+        if (event.getAction() == MotionEvent.ACTION_UP) {
             draw = false;
             smallCenterX = BigCenterX;
             smallCenterY = BigCenterY;
             clearView();
-        }
-        else if (event.getAction() == MotionEvent.ACTION_DOWN)
-        {
+        } else if (event.getAction() == MotionEvent.ACTION_DOWN) {
             float pointX = event.getX();
             float pointY = event.getY();
-            if((pointX > minX && pointX < maxY) && (pointY > minY && pointY < maxY))
-            {
-                draw  = true;
+            if ((pointX > minX && pointX < maxY) && (pointY > minY && pointY < maxY)) {
+                draw = true;
                 BigCenterX = event.getX();
                 BigCenterY = event.getY();
                 smallCenterX = BigCenterX;
                 smallCenterY = BigCenterY;
             }
-        }
-        else if (event.getAction() == MotionEvent.ACTION_MOVE)
-        {
+        } else if (event.getAction() == MotionEvent.ACTION_MOVE) {
             int pointX = (int) event.getX();
             int pointY = (int) event.getY();
-            if (Math.sqrt(Math.pow((BigCenterX - (int) event.getX()), 2) + Math.pow((BigCenterY - (int) event.getY()), 2)) <= BigCenterR)
-            {
+            if (Math.sqrt(Math.pow((BigCenterX - (int) event.getX()), 2) + Math.pow((BigCenterY - (int) event.getY()), 2)) <= BigCenterR) {
                 smallCenterX = pointX;
                 smallCenterY = pointY;
-            }
-            else
-            {
+            } else {
                 setSmallCircleXY(BigCenterX, BigCenterY, BigCenterR, getRad(BigCenterX, BigCenterY, pointX, pointY));
             }
         }
@@ -131,14 +111,14 @@ public class ThrottleStick extends SurfaceView implements Callback,Runnable
 
     /**
      * 得到两点之间的弧度
-     * @param px1    第一个点的X坐标
-     * @param py1    第一个点的Y坐标
-     * @param px2    第二个点的X坐标
-     * @param py2    第二个点的Y坐标
+     *
+     * @param px1 第一个点的X坐标
+     * @param py1 第一个点的Y坐标
+     * @param px2 第二个点的X坐标
+     * @param py2 第二个点的Y坐标
      * @return
      */
-    public double getRad(float px1, float py1, float px2, float py2)
-    {
+    public double getRad(float px1, float py1, float px2, float py2) {
         //得到两点X的距离
         float x = px2 - px1;
         //得到两点Y的距离
@@ -150,76 +130,59 @@ public class ThrottleStick extends SurfaceView implements Callback,Runnable
         //通过反余弦定理获取到其角度的弧度
         float rad = (float) Math.acos(cosAngle);
         //当触屏的位置Y坐标<摇杆的Y坐标我们要取反值-0~-180
-        if (py2 < py1)
-        {
+        if (py2 < py1) {
             rad = -rad;
         }
         return rad;
     }
 
-    public void setSmallCircleXY(float centerX, float centerY, float R, double rad)
-    {
+    public void setSmallCircleXY(float centerX, float centerY, float R, double rad) {
         smallCenterX = (float) (R * Math.cos(rad)) + centerX;
         smallCenterY = (float) (R * Math.sin(rad)) + centerY;
     }
 
-    public void drawStick()
-    {
-        try
-        {
+    public void drawStick() {
+        try {
             canvas = sfh.lockCanvas();
-            if (canvas != null)
-            {
+            if (canvas != null) {
                 canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
                 paint.setColor(Color.RED);
                 paint.setAlpha(0x77);
                 canvas.drawCircle(BigCenterX, BigCenterY, BigCenterR, paint);
                 canvas.drawCircle(smallCenterX, smallCenterY, smallCenterR, paint);
             }
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             // TODO: handle exception
-        }
-        finally
-        {
+        } finally {
             if (canvas != null)
                 sfh.unlockCanvasAndPost(canvas);
         }
     }
 
-    public void clearView()
-    {
-        try
-        {
+    public void clearView() {
+        try {
             canvas = sfh.lockCanvas();
-            if (canvas != null)
-            {
+            if (canvas != null) {
                 canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
             }
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             // TODO: handle exception
-        }
-        finally
-        {
+        } finally {
             if (canvas != null)
                 sfh.unlockCanvasAndPost(canvas);
         }
     }
 
     @Override
-    public void surfaceCreated(SurfaceHolder holder)
-    {
+    public void surfaceCreated(SurfaceHolder holder) {
         screenW = this.getWidth();
         screenH = this.getHeight();
 
-        BigCenterR = screenH/6;
-        smallCenterR = screenH/12;
+        BigCenterR = screenH / 6;
+        smallCenterR = screenH / 12;
 
         minX = BigCenterR;
-        maxX = screenW - minX*2;
+        maxX = screenW - minX * 2;
 
         minY = BigCenterR;
         maxY = screenH;
@@ -231,14 +194,12 @@ public class ThrottleStick extends SurfaceView implements Callback,Runnable
     }
 
     @Override
-    public void surfaceDestroyed(SurfaceHolder holder)
-    {
+    public void surfaceDestroyed(SurfaceHolder holder) {
         flag = false;
     }
 
     @Override
-    public void surfaceChanged(SurfaceHolder holder, int format, int width, int height)
-    {
+    public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
     }
 
 }

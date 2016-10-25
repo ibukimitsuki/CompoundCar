@@ -43,10 +43,8 @@ public class DeviceListActivity extends Activity {
 
         // 设定扫描按键响应
         Button scanButton = (Button) findViewById(R.id.button_scan);
-        scanButton.setOnClickListener(new View.OnClickListener()
-        {
-            public void onClick(View v)
-            {
+        scanButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
                 doDiscovery();
                 v.setVisibility(View.GONE);
             }
@@ -106,9 +104,10 @@ public class DeviceListActivity extends Activity {
         this.unregisterReceiver(mReceiver);
     }
 
-    public void OnCancel(View v){
+    public void OnCancel(View v) {
         finish();
     }
+
     /**
      * 开始服务和设备查找
      */
@@ -163,7 +162,7 @@ public class DeviceListActivity extends Activity {
                 // 如果是已配对的则略过，已得到显示，其余的在添加到列表中进行显示
                 if (device.getBondState() != BluetoothDevice.BOND_BONDED) {
                     mNewDevicesArrayAdapter.add(device.getName() + "\n" + device.getAddress());
-                }else{  //添加到已配对设备列表
+                } else {  //添加到已配对设备列表
                     mPairedDevicesArrayAdapter.add(device.getName() + "\n" + device.getAddress());
                 }
                 // 搜索完成action

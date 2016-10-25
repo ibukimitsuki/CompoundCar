@@ -13,8 +13,7 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceHolder.Callback;
 import android.view.SurfaceView;
 
-public class ButtonView extends SurfaceView implements Callback,Runnable
-{
+public class ButtonView extends SurfaceView implements Callback, Runnable {
     private boolean flag;
     private boolean draw;
 
@@ -32,15 +31,14 @@ public class ButtonView extends SurfaceView implements Callback,Runnable
     private SurfaceHolder sfh;
     private Paint paint;
 
-    private float smallCenterX , smallCenterY, smallCenterR = 20;
-    private float BigCenterX , BigCenterY, BigCenterR = 40;
+    private float smallCenterX, smallCenterY, smallCenterR = 20;
+    private float BigCenterX, BigCenterY, BigCenterR = 40;
     private float minX, minY, maxX, maxY;
 
     //private float throttleIncreamental = 10;
 
-    public ButtonView(Context context,AttributeSet attrs)
-    {
-        super(context,attrs);
+    public ButtonView(Context context, AttributeSet attrs) {
+        super(context, attrs);
         sfh = this.getHolder();
         sfh.addCallback(this);
         paint = new Paint();
@@ -49,36 +47,29 @@ public class ButtonView extends SurfaceView implements Callback,Runnable
     }
 
     @Override
-    public void run()
-    {
-        while (flag)
-        {
+    public void run() {
+        while (flag) {
             long start = System.currentTimeMillis();
-            if(draw)
-            {
+            if (draw) {
                 drawButton();
             }
             logic();
             long end = System.currentTimeMillis();
             try {
-                if (end - start < 50)
-                {
+                if (end - start < 50) {
                     Thread.sleep(50 - (end - start));
                 }
-            }
-            catch (InterruptedException e)
-            {
+            } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         }
     }
 
-    public void logic()
-    {
+    public void logic() {
         Intent xIntent = new Intent(THROTTLEX_CHANGED);
         Intent yIntent = new Intent(THROTTLEY_CHANGED);
-        float valx = (smallCenterY - (BigCenterY - BigCenterR))/BigCenterR*100;
-        float valy = (smallCenterX - (BigCenterX - BigCenterR))/BigCenterR*100;
+        float valx = (smallCenterY - (BigCenterY - BigCenterR)) / BigCenterR * 100;
+        float valy = (smallCenterX - (BigCenterX - BigCenterR)) / BigCenterR * 100;
         xIntent.putExtra("throttlex", Math.round(valx));
         yIntent.putExtra("throttley", Math.round(valy));
         LocalBroadcastManager.getInstance(getContext()).sendBroadcast(xIntent);
@@ -86,24 +77,20 @@ public class ButtonView extends SurfaceView implements Callback,Runnable
     }
 
     @Override
-    public boolean onTouchEvent(MotionEvent event)
-    {
+    public boolean onTouchEvent(MotionEvent event) {
         //Action_UP 手指松开
-        if (event.getAction() == MotionEvent.ACTION_UP)
-        {
+        if (event.getAction() == MotionEvent.ACTION_UP) {
             clearView();
             draw = false;
             smallCenterX = BigCenterX;
             smallCenterY = BigCenterY;
         }
         //Action_Down 手指按下
-        else if (event.getAction() == MotionEvent.ACTION_DOWN)
-        {
+        else if (event.getAction() == MotionEvent.ACTION_DOWN) {
             float pointX = event.getX();
             float pointY = event.getY();
-            if((pointX > minX && pointX < maxY) && (pointY > minY && pointY < maxY))
-            {
-                draw  = true;
+            if ((pointX > minX && pointX < maxY) && (pointY > minY && pointY < maxY)) {
+                draw = true;
                 BigCenterX = event.getX();
                 BigCenterY = event.getY();
                 smallCenterX = BigCenterX;
@@ -112,17 +99,13 @@ public class ButtonView extends SurfaceView implements Callback,Runnable
         }
         //Action_Move手指移动
         //Action_Move手指移动
-        else if (event.getAction() == MotionEvent.ACTION_MOVE)
-        {
+        else if (event.getAction() == MotionEvent.ACTION_MOVE) {
             int pointX = (int) event.getX();
             int pointY = (int) event.getY();
-            if (Math.sqrt(Math.pow((BigCenterX - (int) event.getX()), 2) + Math.pow((BigCenterY - (int) event.getY()), 2)) <= BigCenterR)
-            {
+            if (Math.sqrt(Math.pow((BigCenterX - (int) event.getX()), 2) + Math.pow((BigCenterY - (int) event.getY()), 2)) <= BigCenterR) {
                 smallCenterX = pointX;
                 smallCenterY = pointY;
-            }
-            else
-            {
+            } else {
                 setSmallCircleXY(BigCenterX, BigCenterY, BigCenterR, getRad(BigCenterX, BigCenterY, pointX, pointY));
             }
         }
@@ -132,10 +115,11 @@ public class ButtonView extends SurfaceView implements Callback,Runnable
 
     /**
      * 得到两点之间的弧度
-     * @param px1    第一个点的X坐标
-     * @param py1    第一个点的Y坐标
-     * @param px2    第二个点的X坐标
-     * @param py2    第二个点的Y坐标
+     *
+     * @param px1 第一个点的X坐标
+     * @param py1 第一个点的Y坐标
+     * @param px2 第二个点的X坐标
+     * @param py2 第二个点的Y坐标
      * @return
      */
     public double getRad(float px1, float py1, float px2, float py2) {
@@ -156,16 +140,13 @@ public class ButtonView extends SurfaceView implements Callback,Runnable
         return rad;
     }
 
-    public void setSmallCircleXY(float centerX, float centerY, float R, double rad)
-    {
+    public void setSmallCircleXY(float centerX, float centerY, float R, double rad) {
         smallCenterX = (float) (R * Math.cos(rad)) + centerX;
         smallCenterY = (float) (R * Math.sin(rad)) + centerY;
     }
 
-    public void drawButton()
-    {
-        try
-        {
+    public void drawButton() {
+        try {
             canvas = sfh.lockCanvas();
             if (canvas != null) {
                 canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
@@ -174,52 +155,40 @@ public class ButtonView extends SurfaceView implements Callback,Runnable
                 canvas.drawCircle(BigCenterX, BigCenterY, BigCenterR, paint);
                 canvas.drawCircle(smallCenterX, smallCenterY, smallCenterR, paint);
             }
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             // TODO: handle exception
-        }
-        finally
-        {
+        } finally {
             if (canvas != null)
                 sfh.unlockCanvasAndPost(canvas);
         }
     }
 
-    public void clearView()
-    {
-        try
-        {
+    public void clearView() {
+        try {
             canvas = sfh.lockCanvas();
-            if (canvas != null)
-            {
+            if (canvas != null) {
                 canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
             }
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             // TODO: handle exception
-        }
-        finally
-        {
+        } finally {
             if (canvas != null)
                 sfh.unlockCanvasAndPost(canvas);
         }
     }
 
     @Override
-    public void surfaceCreated(SurfaceHolder holder)
-    {
+    public void surfaceCreated(SurfaceHolder holder) {
         screenW = this.getWidth();
         screenH = this.getHeight();
 
-        BigCenterR = screenH/6;
-        smallCenterR = screenH/12;
+        BigCenterR = screenH / 6;
+        smallCenterR = screenH / 12;
 
-        minX = (BigCenterR)/2;
+        minX = (BigCenterR) / 2;
         maxX = screenW - minX;
 
-        minY = (BigCenterR)/2;
+        minY = (BigCenterR) / 2;
         maxY = screenH - maxY;
 
 
